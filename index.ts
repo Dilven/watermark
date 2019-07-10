@@ -20,7 +20,7 @@ interface Options {
   result: Result
 }
 
-type Callback = (err: string, buffer?: string) => any 
+type Callback = (err: Error, result?: string | Buffer) => any 
 
 const getPosition = (position: Position, size: any) => {
   switch (position) {
@@ -68,11 +68,11 @@ const watermark = function (options: Options, callback: Callback) {
         if(result === "file") {
           gm(bufferImage)
             .draw('params + logo')
-            .write(saveDestination, callback);
+            .write(saveDestination, (err, result) => callback(err, result));
         } else {
           gm(bufferImage)
             .draw('params + logo')
-            .toBuffer('PNG', callback)
+            .toBuffer('PNG', (err, result) => callback(err, result))
         }
       } else {
         console.error(err);
